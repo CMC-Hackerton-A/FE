@@ -243,12 +243,11 @@ export default function ActivePage() {
           ))}
         </div>
       ) : null}
-
       <div className="relative z-10 flex h-full flex-col px-4 pt-5 pb-24">
-        <div className="flex items-center gap-2">
+        <div className="flex items-start justify-between">
           <IconButton icon={<BackIcon />} onClick={() => navigate(-1)} />
 
-          <div className="flex flex-1 justify-center">
+          <div className="flex items-start gap-2">
             <div
               className="
                 relative inline-flex h-8 items-center justify-center
@@ -257,17 +256,17 @@ export default function ActivePage() {
                 text-[10px] leading-[12px] font-semibold text-[#3E2A69]
                 whitespace-nowrap
                 after:content-[''] after:absolute
-                after:-top-[4px] after:right-[14px]
-                after:h-[10px] after:w-[10px]
+                after:top-1/2 after:-right-[4px] after:-translate-y-1/2
+                after:h-[7px] after:w-[7px]
                 after:rotate-45 after:bg-[#FEE4EF]
                 after:rounded-[2px]
               "
             >
               내 스타에게 메시지를 남겨주세요!
             </div>
-          </div>
 
-          <IconButton icon={<MessageCircle size={18} />} />
+            <IconButton icon={<MessageCircle size={18} />} onClick={() => navigate(`/active/${artist.id}/comments`)} />
+          </div>
         </div>
 
         <section className="mt-9 flex flex-1 flex-col items-center overflow-y-auto pb-4">
