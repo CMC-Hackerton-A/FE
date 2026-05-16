@@ -1,0 +1,129 @@
+/* =============================================================
+   Typography
+   폰트 패밀리, 크기 스케일, 렌더링 설정을 관리합니다.
+   - 폰트를 교체할 경우: index.css의 @import와
+     @theme inline의 --font-sans도 함께 바꿔주세요.
+   ============================================================= */
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../assets/fonts/PretendardVariable.woff2') format('woff2');
+  font-weight: 100 900; /* 모든 weight를 하나의 파일로 */
+  font-display: swap;
+}
+
+:root {
+  /* ── 렌더링 ── */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  body {
+    @apply font-pretendard;
+  }
+}
+
+/* =============================================================
+   Typography Components
+   디자인 시스템의 텍스트 스타일을 클래스로 정의합니다.
+   JSX에서 className="title1" 형태로 사용합니다.
+
+   추가 방법:
+   1. 아래에 @layer components 블록 안에 클래스 작성
+   2. 이름 규칙: {계층}/{굵기}{크기} → 클래스명: {계층}-{굵기숫자}
+      예) Title1/Bold40 → .title1, Body1/Regular16 → .body1-regular
+   ============================================================= */
+
+@layer components {
+  /* Title1/Bold40 — Pretendard Bold 40px, line-height 100% */
+  .title1 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1;
+  }
+
+  /* Title2/Bold28 — Pretendard Bold 28px, line-height 100% */
+  .title2 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  /* Title3/Bold24 — Pretendard Bold 24px, line-height 100% */
+  .title3 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  /* Title4/Bold24(Wrong) — 취소선(Decoration)이 포함된 스타일 */
+  .title4 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    text-decoration-line: line-through; /* 취소선 추가 */
+  }
+
+  /* Subtitle1/SemiBold24 — Pretendard SemiBold 24px, line-height 100% */
+  .subtitle1 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  /* Subtitle2/SemiBold22 — Pretendard SemiBold 22px, line-height 100% */
+  .subtitle2 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  /* Subtitle3/Bold20 — Pretendard Bold 20px, line-height 100% */
+  .subtitle3 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  /* Subtitle4/SemiBold20 — Pretendard SemiBold 20px, line-height 100% */
+  .subtitle4 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  /* Subtitle5/Medium20 — Pretendard Medium 20px, line-height 100% */
+  .subtitle5 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  /* Subtitle6/SemiBold18 — Pretendard SemiBold 18px, line-height 100% */
+  .subtitle6 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  /* Subtitle7/SemiBold17 — Pretendard SemiBold 17px, line-height 100% */
+  .subtitle7 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1;
+  }
+}
