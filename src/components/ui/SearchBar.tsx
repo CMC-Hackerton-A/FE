@@ -1,6 +1,6 @@
 import * as React from 'react'
 import SearchIcon from '@/assets/icons/common/search-icon.svg?react'
-import { cn } from '@/lib/utils'
+
 interface SearchBarProps {
   value: string
   placeholder?: string

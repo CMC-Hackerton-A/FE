@@ -11,10 +11,8 @@ export default function HomePage() {
 
   return (
     <main className="relative h-dvh w-full overflow-hidden bg-white">
-      <div className="fixed inset-x-0 top-6 z-50 flex justify-center">
-        <div className="w-full max-w-[430px] px-4">
-          <Header />
-        </div>
+      <div className="absolute inset-x-0 top-6 z-50">
+        <Header showBackButton={false} />
       </div>
 
       <HeroSection onSearch={setSearchQuery} searchedText={searchQuery} />
