@@ -1,23 +1,42 @@
-import SearchResultItem from './search-result-item'
+﻿import SearchResultItem from './search-result-item'
+import { Swiper, SwiperSlide } from 'swiper/react'
 import XIcon from '@/assets/icons/common/x-icon.svg?react'
+import { Pagination } from 'swiper/modules'
+import 'swiper/css'
+
 interface SearchResultSectionProps {
   query: string
 }
 
 export function SearchResultSection({ query }: SearchResultSectionProps) {
   // TODO: useSearchArtistsQuery(query) 로 교체
+  const length = 7
 
-  const length = 1
+  const mockData = Array.from({ length }, (_, index) => ({
+    id: index + 1,
+    name: `artist-${index + 1}`,
+  }))
+
+  const chunkedData = Array.from(
+    { length: Math.ceil(mockData.length / 4) },
+    (_, index) => mockData.slice(index * 4, index * 4 + 4)
+  )
+
   return (
     <>
-      {length > 0 ? (
+      {mockData.length > 0 ? (
         <div className="flex flex-col gap-5">
-          <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
-            <SearchResultItem />
-            <SearchResultItem />
-            <SearchResultItem />
-            <SearchResultItem />
-          </div>
+          <Swiper slidesPerView={1}>
+            {chunkedData.map((slideItems, slideIndex) => (
+              <SwiperSlide key={slideIndex}>
+                <div className="flex flex-col gap-2">
+                  {slideItems.map((artist) => (
+                    <SearchResultItem key={artist.id} />
+                  ))}
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
           <div className="flex w-full items-center justify-center">...</div>
         </div>
       ) : (
