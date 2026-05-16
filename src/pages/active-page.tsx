@@ -1,24 +1,94 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { MessageCircle, Star } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { IconButton } from '@/components/ui/icon-button'
 import BackIcon from '@/assets/icons/common/back.svg?react'
 import beatlesImg from '@/assets/images/main-beatles.png'
 import activeBackground from '@/img/active-background.png'
 import type { TopArtist } from '@/components/artist/top-artist-card'
 
+type ArtistApiPayload = Partial<{
+  id: number | string
+  artistId: number | string
+  name: string
+  artistName: string
+  profileImage: string
+  imageUrl: string
+  genre: string
+  country: string
+  startYear: number | string
+  endYear: number | string
+  starCount: number | string
+}>
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
+
+function mapArtistPayloadToTopArtist(payload: ArtistApiPayload, fallbackId: number): TopArtist {
+  const startYear = Number(payload.startYear ?? 1985)
+  const endYear = Number(payload.endYear ?? 2014)
+
+  return {
+    id: Number(payload.id ?? payload.artistId ?? fallbackId),
+    name: payload.name ?? payload.artistName ?? '비틀즈',
+    imageUrl: payload.imageUrl ?? payload.profileImage ?? beatlesImg,
+    genre: payload.genre ?? '인디밴드',
+    country: payload.country ?? '미국',
+    startYear,
+    endYear,
+    starCount: Number(payload.starCount ?? 0),
+  }
+}
+
+async function fetchArtistDetail(artistId: number): Promise<TopArtist> {
+  const endpointCandidates = [`${API_BASE_URL}/api/artists/${artistId}`, `${API_BASE_URL}/artists/${artistId}`]
+
+  let lastError: Error | null = null
+
+  for (const endpoint of endpointCandidates) {
+    try {
+      const response = await fetch(endpoint)
+      if (!response.ok) {
+        throw new Error(`요청 실패: ${response.status}`)
+      }
+
+      const json: unknown = await response.json()
+      const root = json as { result?: ArtistApiPayload; data?: ArtistApiPayload } & ArtistApiPayload
+      const payload = root.result ?? root.data ?? root
+
+      return mapArtistPayloadToTopArtist(payload, artistId)
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error('아티스트 정보를 불러오지 못했습니다.')
+    }
+  }
+
+  throw lastError ?? new Error('아티스트 정보를 불러오지 못했습니다.')
+}
+
 export default function ActivePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { id } = useParams()
 
+  const artistId = Number(id ?? 0)
+
+  const stateArtist = useMemo<TopArtist | null>(() => {
+    const artist = (location.state as { artist?: TopArtist } | null)?.artist
+    return artist ?? null
+  }, [location.state])
+
+  const { data: apiArtist } = useQuery({
+    queryKey: ['artist-detail', artistId],
+    queryFn: () => fetchArtistDetail(artistId),
+    enabled: Number.isFinite(artistId) && artistId > 0,
+  })
+
   const artist = useMemo<TopArtist>(() => {
-    const stateArtist = (location.state as { artist?: TopArtist } | null)?.artist
+    if (apiArtist) return apiArtist
     if (stateArtist) return stateArtist
 
-    // TODO: 상세 API 연결 후 id로 조회한 실제 데이터로 대체
     return {
-      id: Number(id ?? 0),
+      id: artistId,
       name: '비틀즈',
       imageUrl: beatlesImg,
       genre: '인디밴드',
@@ -27,10 +97,14 @@ export default function ActivePage() {
       endYear: 2014,
       starCount: 0,
     }
-  }, [id, location.state])
+  }, [apiArtist, artistId, stateArtist])
 
   const duration = artist.endYear - artist.startYear
   const [starCount, setStarCount] = useState(artist.starCount)
+
+  useEffect(() => {
+    setStarCount(artist.starCount)
+  }, [artist.starCount])
 
   return (
     <main
@@ -40,9 +114,26 @@ export default function ActivePage() {
       <div className="relative z-10 flex h-full flex-col px-4 pt-5">
         <div className="flex items-center gap-2">
           <IconButton icon={<BackIcon />} onClick={() => navigate(-1)} />
-          <div className="flex flex-1 items-center justify-center gap-2 rounded-[50px] bg-[#FEE4EF] px-5 py-2.5 text-center text-[10px] leading-none font-semibold text-[#5d2a8f]">
-            내 스타에게 메시지를 남겨주세요!
+
+          <div className="flex flex-1 justify-center">
+          <div
+  className="
+    relative inline-flex h-8 items-center justify-center
+    rounded-[50px] bg-[#FEE4EF]
+    px-5 py-2.5
+    text-[10px] leading-[12px] font-semibold text-[#3E2A69]
+    whitespace-nowrap
+    after:content-[''] after:absolute
+    after:-top-[4px] after:right-[14px]
+    after:h-[10px] after:w-[10px]
+    after:rotate-45 after:bg-[#FEE4EF]
+    after:rounded-[2px]
+  "
+>
+  내 스타에게 메시지를 남겨주세요!
+</div>
           </div>
+
           <IconButton icon={<MessageCircle size={18} />} />
         </div>
 
@@ -67,10 +158,9 @@ export default function ActivePage() {
           >
             <Star className="h-14 w-14 fill-white text-white" />
           </button>
-          <p className="mt-3 text-[44px] leading-none font-extrabold">
-            {starCount.toLocaleString()}
-          </p>
-          <p className="mt-10 text-sm font-semibold">연타해서 별을 더하세요!</p>
+
+          <p className="mt-3 text-[44px] leading-none font-extrabold">{starCount.toLocaleString()}</p>
+          <p className="mt-10 text-sm font-semibold">⭐ 당신의 별이 더해졌어요</p>
         </section>
 
         <div className="-mx-4 h-[52px] shrink-0 rounded-t-[24px] bg-white">
