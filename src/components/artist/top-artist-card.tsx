@@ -37,12 +37,12 @@ export default function TopArtistCard({ rank, artist }: TopArtistCardProps) {
           className="size-20 shrink-0 rounded-sm object-cover"
         />
 
-        <div className="inline-flex flex-col">
+        <div className="inline-flex flex-col justify-center">
           <h2 className="body1-semibold truncate">{artist.name}</h2>
           <span className="caption4-regular text-mono-gray-6 block truncate">
             {`${artist.startYear} - ${artist.endYear}, ${duration}년`}
           </span>
-          <div className="bg-mono-gray-3 my-2 h-[0.5px] w-full" />
+          <div className="bg-mono-gray-3 my-2 h-[0.5px] w-[114px]" />
           <div className="flex items-center gap-[5px]">
             <StarIcon size={14} className="text-yellow-400" />
             <span className="text-pink-30 text-sm leading-none font-bold">
