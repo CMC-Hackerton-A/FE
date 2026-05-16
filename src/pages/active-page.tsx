@@ -3,6 +3,8 @@ import { useLocation, useNavigate, useParams } from 'react-router'
 import { MessageCircle, Star } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { IconButton } from '@/components/ui/icon-button'
+import { BottomSheet } from '@/components/ui/bottom-sheet'
+import { LastAlbumSection } from '@/components/bottom-sheet/last-album-section'
 import BackIcon from '@/assets/icons/common/back.svg?react'
 import beatlesImg from '@/assets/images/main-beatles.png'
 import activeBackground from '@/img/active-background.png'
@@ -34,8 +36,11 @@ type Sparkle = {
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-const SPARKLE_COUNT_BY_LEVEL = [0, 14, 30, 52] as const
-const SPARKLE_SIZE_MULTIPLIER = 3
+
+// 100 / 1000 / 10000 단계별 반짝이 개수
+const SPARKLE_COUNT_BY_LEVEL = [0, 10, 18, 28] as const
+// 단계별 반짝이 최종 크기 배율
+const SPARKLE_SIZE_MULTIPLIER_BY_LEVEL = [0, 1.3, 1.65, 2.0] as const
 
 const sparkleKeyframes = `
 @keyframes sparkleTwinkle {
@@ -63,14 +68,17 @@ function createSparkles(level: number, seed: number): Sparkle[] {
   if (!count) return []
 
   const random = createSeededRandom(seed + level * 97)
-  const minSizeByLevel = [0, 10, 12, 14] as const
-  const maxSizeByLevel = [0, 16, 20, 24] as const
-  const minSize = minSizeByLevel[level] ?? 7
-  const maxSize = maxSizeByLevel[level] ?? 12
+
+  // 단계별 기본 별 크기 범위
+  const minSizeByLevel = [0, 7, 9, 11] as const
+  const maxSizeByLevel = [0, 11, 14, 18] as const
+  const minSize = minSizeByLevel[level] ?? 6
+  const maxSize = maxSizeByLevel[level] ?? 10
 
   return Array.from({ length: count }, (_, index) => {
-    const isHighlight = random() > 0.78
-    const baseSize = minSize + random() * (maxSize - minSize) + (isHighlight ? level * 4 : 0)
+    const isHighlight = random() > 0.9
+    const baseSize = minSize + random() * (maxSize - minSize) + (isHighlight ? level * 2 : 0)
+
     return {
       id: `sparkle-${level}-${index}`,
       top: 8 + random() * 76,
@@ -98,6 +106,11 @@ function mapArtistPayloadToTopArtist(payload: ArtistApiPayload, fallbackId: numb
     endYear,
     starCount: Number(payload.starCount ?? 0),
   }
+}
+
+function normalizeStarCount(value: unknown): number {
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : 0
 }
 
 async function fetchArtistDetail(artistId: number): Promise<TopArtist> {
@@ -160,10 +173,11 @@ export default function ActivePage() {
   }, [apiArtist, artistId, stateArtist])
 
   const duration = artist.endYear - artist.startYear
-  const [starCount, setStarCount] = useState(artist.starCount)
+  const [starCount, setStarCount] = useState(() => normalizeStarCount(artist.starCount))
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true)
 
   useEffect(() => {
-    setStarCount(artist.starCount)
+    setStarCount(normalizeStarCount(artist.starCount))
   }, [artist.starCount])
 
   const sparkleLevel = useMemo(() => {
@@ -172,6 +186,8 @@ export default function ActivePage() {
     if (starCount >= 100) return 1
     return 0
   }, [starCount])
+
+  const sparkleSizeMultiplier = SPARKLE_SIZE_MULTIPLIER_BY_LEVEL[sparkleLevel] ?? 1
 
   const sparkles = useMemo(() => {
     return createSparkles(sparkleLevel, artist.id)
@@ -183,6 +199,7 @@ export default function ActivePage() {
       style={{ backgroundImage: `url(${activeBackground})` }}
     >
       <style>{sparkleKeyframes}</style>
+
       {sparkles.length > 0 ? (
         <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden="true">
           {sparkles.map((sparkle) => (
@@ -193,10 +210,10 @@ export default function ActivePage() {
                 {
                   top: `${sparkle.top}%`,
                   left: `${sparkle.left}%`,
-                  width: sparkle.size * SPARKLE_SIZE_MULTIPLIER,
-                  height: sparkle.size * SPARKLE_SIZE_MULTIPLIER,
+                  width: sparkle.size * sparkleSizeMultiplier,
+                  height: sparkle.size * sparkleSizeMultiplier,
                   animation: `sparkleTwinkle ${sparkle.duration}s ease-in-out ${sparkle.delay}s infinite`,
-                  filter: `drop-shadow(0 0 ${Math.max(6, Math.round(sparkle.size * SPARKLE_SIZE_MULTIPLIER * 0.95))}px rgba(255,255,255,0.95))`,
+                  filter: `drop-shadow(0 0 ${Math.max(6, Math.round(sparkle.size * sparkleSizeMultiplier * 0.95))}px rgba(255,255,255,0.95))`,
                   ['--sparkle-rotate' as string]: `${sparkle.rotate}deg`,
                   ['--sparkle-opacity' as string]: sparkle.opacity,
                 } as CSSProperties
@@ -207,6 +224,7 @@ export default function ActivePage() {
               </svg>
             </div>
           ))}
+
           {sparkles.map((sparkle) => (
             <div
               key={`${sparkle.id}-glow`}
@@ -214,10 +232,10 @@ export default function ActivePage() {
               style={{
                 top: `${sparkle.top}%`,
                 left: `${sparkle.left}%`,
-                width: Math.max(5, Math.round(sparkle.size * SPARKLE_SIZE_MULTIPLIER * 0.52)),
-                height: Math.max(5, Math.round(sparkle.size * SPARKLE_SIZE_MULTIPLIER * 0.52)),
+                width: Math.max(5, Math.round(sparkle.size * sparkleSizeMultiplier * 0.52)),
+                height: Math.max(5, Math.round(sparkle.size * sparkleSizeMultiplier * 0.52)),
                 transform: 'translate(-50%, -50%)',
-                filter: `blur(${Math.max(2, Math.round(sparkle.size * SPARKLE_SIZE_MULTIPLIER * 0.2))}px)`,
+                filter: `blur(${Math.max(2, Math.round(sparkle.size * sparkleSizeMultiplier * 0.2))}px)`,
                 opacity: Math.min(0.45, sparkle.opacity * 0.6),
                 animation: `sparkleTwinkle ${sparkle.duration + 0.15}s ease-in-out ${sparkle.delay}s infinite`,
               }}
@@ -225,27 +243,28 @@ export default function ActivePage() {
           ))}
         </div>
       ) : null}
-      <div className="relative z-10 flex h-full flex-col px-4 pt-5">
+
+      <div className="relative z-10 flex h-full flex-col px-4 pt-5 pb-24">
         <div className="flex items-center gap-2">
           <IconButton icon={<BackIcon />} onClick={() => navigate(-1)} />
 
           <div className="flex flex-1 justify-center">
-          <div
-  className="
-    relative inline-flex h-8 items-center justify-center
-    rounded-[50px] bg-[#FEE4EF]
-    px-5 py-2.5
-    text-[10px] leading-[12px] font-semibold text-[#3E2A69]
-    whitespace-nowrap
-    after:content-[''] after:absolute
-    after:-top-[4px] after:right-[14px]
-    after:h-[10px] after:w-[10px]
-    after:rotate-45 after:bg-[#FEE4EF]
-    after:rounded-[2px]
-  "
->
-  내 스타에게 메시지를 남겨주세요!
-</div>
+            <div
+              className="
+                relative inline-flex h-8 items-center justify-center
+                rounded-[50px] bg-[#FEE4EF]
+                px-5 py-2.5
+                text-[10px] leading-[12px] font-semibold text-[#3E2A69]
+                whitespace-nowrap
+                after:content-[''] after:absolute
+                after:-top-[4px] after:right-[14px]
+                after:h-[10px] after:w-[10px]
+                after:rotate-45 after:bg-[#FEE4EF]
+                after:rounded-[2px]
+              "
+            >
+              내 스타에게 메시지를 남겨주세요!
+            </div>
           </div>
 
           <IconButton icon={<MessageCircle size={18} />} />
@@ -266,7 +285,9 @@ export default function ActivePage() {
 
           <button
             type="button"
-            onClick={() => setStarCount((prev) => prev + 1)}
+            onClick={() => {
+              setStarCount((prev) => normalizeStarCount(prev) + 1)
+            }}
             aria-label="별 추가"
             className="mt-16 rounded-full transition-transform active:scale-95"
           >
@@ -276,11 +297,24 @@ export default function ActivePage() {
           <p className="mt-3 text-[44px] leading-none font-extrabold">{starCount.toLocaleString()}</p>
           <p className="mt-10 text-sm font-semibold">⭐ 당신의 별이 더해졌어요</p>
         </section>
-
-        <div className="-mx-4 h-[52px] shrink-0 rounded-t-[24px] bg-white">
-          <div className="mx-auto mt-3 h-1 w-24 rounded-full bg-[#d7d7d7]" />
-        </div>
       </div>
+
+      <BottomSheet
+        isOpen={isBottomSheetOpen}
+        onClose={() => setIsBottomSheetOpen(false)}
+        title=""
+      >
+        {() => (
+          <div className="pt-1">
+            <LastAlbumSection
+              albumTitle="Meet the Beatles!"
+              albumYear="1985.08"
+              songTitle="Introducing... The Beatles"
+              songYear="1985.08"
+            />
+          </div>
+        )}
+      </BottomSheet>
     </main>
   )
 }

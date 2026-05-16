@@ -38,7 +38,7 @@ export function BottomSheet({
   if (!isOpen) return null
 
   return createPortal(
-    <div className="fixed inset-0 touch-none" style={{ zIndex: 100 }}>
+    <div className="pointer-events-none fixed inset-0 touch-none" style={{ zIndex: 100 }}>
       {/* backdrop */}
       {/** biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <div
@@ -50,7 +50,7 @@ export function BottomSheet({
       <div
         ref={sheetRef}
         className={cn(
-          'fixed bottom-0 left-1/2 w-full max-w-[430px] -translate-x-1/2',
+          'pointer-events-auto fixed inset-x-0 bottom-0 w-full',
           'flex flex-col bg-white',
           'overflow-hidden',
           isFull ? 'rounded-none' : 'rounded-t-2xl'
