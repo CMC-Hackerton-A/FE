@@ -6,6 +6,12 @@
    ============================================================= */
 
 :root {
+  /* ── 모노 색상 ──
+     디자인 시스템의 고정 팔레트입니다. light/dark 무관하게 값이 바뀌지 않습니다.
+     새 색상을 추가하면 index.css의 @theme inline에도 --color-{이름} 매핑을 추가하세요. */
+  --mono-white: #ffffff;
+  --mono-black: #000000;
+
   /* ── 색상 ── */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

@@ -27,6 +27,10 @@
   --font-sans: 'Geist Variable', sans-serif;
   --font-heading: var(--font-sans);
 
+  /* 모노 색상 */
+  --color-mono-white: var(--mono-white);
+  --color-mono-black: var(--mono-black);
+
   /* 색상 */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
