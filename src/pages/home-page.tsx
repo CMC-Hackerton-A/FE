@@ -12,7 +12,7 @@ export default function HomePage() {
       </div>
       <HeroSection />
 
-      <div className="relative z-10 -mt-6 min-h-[calc(100dvh-360px-24px)]">
+      <div className="relative z-10 -mt-6 h-[calc(60dvh+24px)]">
         <TopArtistSection />
       </div>
     </main>
