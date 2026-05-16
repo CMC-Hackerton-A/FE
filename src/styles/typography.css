@@ -126,4 +126,107 @@
     font-size: 17px;
     line-height: 1;
   }
+  /* Body1/SemiBold16 — Pretendard SemiBold 16px, line-height 150% */
+  .body1-semibold {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Body1/Medium16 — Pretendard Medium 16px, line-height 150% */
+  .body1-medium {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Body1/Regular16 — Pretendard Regular 16px, line-height 150% */
+  .body1-regular {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Body2/Semibold15 — Pretendard SemiBold 15px, line-height 150% */
+  .body2-semibold {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* Body2/Medium15 — Pretendard Medium 15px, line-height 150% */
+  .body2-medium {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* Body2/Regular15 — Pretendard Regular 15px, line-height 150% */
+  .body2-regular {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* Button1/Semibold14 — Pretendard SemiBold 14px, line-height 100% */
+  .button1-semibold {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  /* Button2/Medium14 — Pretendard Medium 14px, line-height 100% */
+  .button2-medium {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  /* Button3/Regular13 — Pretendard Regular 13px, line-height 100% */
+  .button3-regular {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  /* Caption1/Semibold12 — Pretendard Semibold 12px, line-height 100% */
+  .caption1-semibold {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  /* Caption2/Regular12 — Pretendard Regular 12px, line-height 100% */
+  .caption2-regular {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  /* Caption3/Medium11 — Pretendard Medium 11px, line-height 100% */
+  .caption3-medium {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+  }
+
+  /* Caption4/Regular11 — Pretendard Regular 11px, line-height 100% */
+  .caption4-regular {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 1;
+  }
 }
