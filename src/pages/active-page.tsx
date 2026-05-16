@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router'
+import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { MessageCircle, Star } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { IconButton } from '@/components/ui/icon-button'
@@ -77,7 +77,8 @@ function createSparkles(level: number, seed: number): Sparkle[] {
 
   return Array.from({ length: count }, (_, index) => {
     const isHighlight = random() > 0.9
-    const baseSize = minSize + random() * (maxSize - minSize) + (isHighlight ? level * 2 : 0)
+    const baseSize =
+      minSize + random() * (maxSize - minSize) + (isHighlight ? level * 2 : 0)
 
     return {
       id: `sparkle-${level}-${index}`,
@@ -92,7 +93,10 @@ function createSparkles(level: number, seed: number): Sparkle[] {
   })
 }
 
-function mapArtistPayloadToTopArtist(payload: ArtistApiPayload, fallbackId: number): TopArtist {
+function mapArtistPayloadToTopArtist(
+  payload: ArtistApiPayload,
+  fallbackId: number
+): TopArtist {
   const startYear = Number(payload.startYear ?? 1985)
   const endYear = Number(payload.endYear ?? 2014)
 
@@ -114,7 +118,10 @@ function normalizeStarCount(value: unknown): number {
 }
 
 async function fetchArtistDetail(artistId: number): Promise<TopArtist> {
-  const endpointCandidates = [`${API_BASE_URL}/api/artists/${artistId}`, `${API_BASE_URL}/artists/${artistId}`]
+  const endpointCandidates = [
+    `${API_BASE_URL}/api/artists/${artistId}`,
+    `${API_BASE_URL}/artists/${artistId}`,
+  ]
 
   let lastError: Error | null = null
 
@@ -126,12 +133,18 @@ async function fetchArtistDetail(artistId: number): Promise<TopArtist> {
       }
 
       const json: unknown = await response.json()
-      const root = json as { result?: ArtistApiPayload; data?: ArtistApiPayload } & ArtistApiPayload
+      const root = json as {
+        result?: ArtistApiPayload
+        data?: ArtistApiPayload
+      } & ArtistApiPayload
       const payload = root.result ?? root.data ?? root
 
       return mapArtistPayloadToTopArtist(payload, artistId)
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error('아티스트 정보를 불러오지 못했습니다.')
+      lastError =
+        error instanceof Error
+          ? error
+          : new Error('아티스트 정보를 불러오지 못했습니다.')
     }
   }
 
@@ -173,7 +186,9 @@ export default function ActivePage() {
   }, [apiArtist, artistId, stateArtist])
 
   const duration = artist.endYear - artist.startYear
-  const [starCount, setStarCount] = useState(() => normalizeStarCount(artist.starCount))
+  const [starCount, setStarCount] = useState(() =>
+    normalizeStarCount(artist.starCount)
+  )
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true)
 
   useEffect(() => {
@@ -187,7 +202,8 @@ export default function ActivePage() {
     return 0
   }, [starCount])
 
-  const sparkleSizeMultiplier = SPARKLE_SIZE_MULTIPLIER_BY_LEVEL[sparkleLevel] ?? 1
+  const sparkleSizeMultiplier =
+    SPARKLE_SIZE_MULTIPLIER_BY_LEVEL[sparkleLevel] ?? 1
 
   const sparkles = useMemo(() => {
     return createSparkles(sparkleLevel, artist.id)
@@ -201,7 +217,10 @@ export default function ActivePage() {
       <style>{sparkleKeyframes}</style>
 
       {sparkles.length > 0 ? (
-        <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden="true">
+        <div
+          className="pointer-events-none absolute inset-0 z-[5] overflow-hidden"
+          aria-hidden="true"
+        >
           {sparkles.map((sparkle) => (
             <div
               key={sparkle.id}
@@ -219,7 +238,10 @@ export default function ActivePage() {
                 } as CSSProperties
               }
             >
-              <svg viewBox="0 0 24 24" className="h-full w-full fill-white text-white">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-full w-full fill-white text-white"
+              >
                 <path d="M12 1.7L14.83 7.44L21.16 8.36L16.58 12.82L17.66 19.12L12 16.14L6.34 19.12L7.42 12.82L2.84 8.36L9.17 7.44L12 1.7Z" />
               </svg>
             </div>
@@ -232,8 +254,14 @@ export default function ActivePage() {
               style={{
                 top: `${sparkle.top}%`,
                 left: `${sparkle.left}%`,
-                width: Math.max(5, Math.round(sparkle.size * sparkleSizeMultiplier * 0.52)),
-                height: Math.max(5, Math.round(sparkle.size * sparkleSizeMultiplier * 0.52)),
+                width: Math.max(
+                  5,
+                  Math.round(sparkle.size * sparkleSizeMultiplier * 0.52)
+                ),
+                height: Math.max(
+                  5,
+                  Math.round(sparkle.size * sparkleSizeMultiplier * 0.52)
+                ),
                 transform: 'translate(-50%, -50%)',
                 filter: `blur(${Math.max(2, Math.round(sparkle.size * sparkleSizeMultiplier * 0.2))}px)`,
                 opacity: Math.min(0.45, sparkle.opacity * 0.6),
@@ -249,35 +277,26 @@ export default function ActivePage() {
           <IconButton icon={<BackIcon />} onClick={() => navigate(-1)} />
 
           <div className="flex flex-1 justify-center">
-            <div
-              className="
-                relative inline-flex h-8 items-center justify-center
-                rounded-[50px] bg-[#FEE4EF]
-                px-5 py-2.5
-                text-[10px] leading-[12px] font-semibold text-[#3E2A69]
-                whitespace-nowrap
-                after:content-[''] after:absolute
-                after:-top-[4px] after:right-[14px]
-                after:h-[10px] after:w-[10px]
-                after:rotate-45 after:bg-[#FEE4EF]
-                after:rounded-[2px]
-              "
-            >
+            <div className="relative inline-flex h-8 items-center justify-center rounded-[50px] bg-[#FEE4EF] px-5 py-2.5 text-[10px] leading-[12px] font-semibold whitespace-nowrap text-[#3E2A69] after:absolute after:-top-[4px] after:right-[14px] after:h-[10px] after:w-[10px] after:rotate-45 after:rounded-[2px] after:bg-[#FEE4EF] after:content-['']">
               내 스타에게 메시지를 남겨주세요!
             </div>
           </div>
 
-          <IconButton icon={<MessageCircle size={18} />} />
+          <Link to={`/active/${artist.id}/comments`}>
+            <IconButton icon={<MessageCircle size={26} />} />
+          </Link>
         </div>
 
         <section className="mt-9 flex flex-1 flex-col items-center overflow-y-auto pb-4">
           <img
             src={artist.imageUrl || beatlesImg}
             alt={artist.name}
-            className="h-[182px] w-[270px] max-w-full rounded-2xl object-cover"
+            className="size-[188px] max-w-full rounded-2xl object-cover"
           />
 
-          <h1 className="mt-6 text-center text-[22px] leading-[100%] font-semibold">{artist.name}</h1>
+          <h1 className="mt-6 text-center text-[22px] leading-[100%] font-semibold">
+            {artist.name}
+          </h1>
           <p className="mt-2 text-center text-[12px] font-medium">{`${artist.genre} / ${artist.country}`}</p>
           <p className="mt-1 text-center text-[20px] leading-[100%] font-bold">
             {`${artist.startYear} - ${artist.endYear}, ${duration}년`}
@@ -294,8 +313,12 @@ export default function ActivePage() {
             <Star className="h-14 w-14 fill-white text-white" />
           </button>
 
-          <p className="mt-3 text-[44px] leading-none font-extrabold">{starCount.toLocaleString()}</p>
-          <p className="mt-10 text-sm font-semibold">⭐ 당신의 별이 더해졌어요</p>
+          <p className="mt-3 text-[44px] leading-none font-extrabold">
+            {starCount.toLocaleString()}
+          </p>
+          <p className="mt-10 text-sm font-semibold">
+            ⭐ 당신의 별이 더해졌어요
+          </p>
         </section>
       </div>
 
