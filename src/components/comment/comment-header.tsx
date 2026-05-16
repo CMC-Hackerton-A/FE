@@ -1,5 +1,5 @@
 import BackIcon from '@/assets/icons/common/back.svg?react'
-import { IconButton } from '@/components/ui/icon-button.tsx'
+import { IconButton } from '@/components/ui/icon-button'
 
 interface CommentHeaderProps {
   totalCount: number
@@ -10,7 +10,7 @@ export function CommentHeader({ totalCount, onBack }: CommentHeaderProps) {
   return (
     <div className="flex items-center gap-3">
       <IconButton
-        icon={<BackIcon className="text-[#361656]" />}
+        icon={<BackIcon />}
         onClick={onBack}
       />
 

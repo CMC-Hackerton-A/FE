@@ -4,19 +4,21 @@ import SearchIcon from '@/assets/icons/common/search-icon.svg?react'
 interface SearchBarProps {
   value: string
   placeholder?: string
-  onSearch: (query: string) => void
+  onChange: (query: string) => void
+  onSubmit?: (query: string) => void
   className?: string
 }
 
 export function SearchBar({
   value,
   placeholder = '다시 빛낼 스타를 입력하세요.',
-  onSearch,
+  onChange,
+  onSubmit,
   className,
 }: SearchBarProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && value.trim()) {
-      onSearch?.(value.trim())
+      onSubmit?.(value.trim())
     }
   }
 
@@ -26,7 +28,7 @@ export function SearchBar({
       <input
         type="text"
         value={value}
-        onChange={(e) => onSearch(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className="text-purple-60 placeholder:text-mono-gray-4 caption1-semibold flex-1 translate-y-px border-none bg-transparent outline-none"
