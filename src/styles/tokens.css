@@ -11,6 +11,16 @@
      새 색상을 추가하면 index.css의 @theme inline에도 --color-{이름} 매핑을 추가하세요. */
   --mono-white: #ffffff;
   --mono-black: #000000;
+  --mono-gray-1: #f3f3f3;
+  --mono-gray-2: #e6e6e6;
+  --mono-gray-3: #cbcbcb;
+  --mono-gray-4: #c3c3c3;
+  --mono-gray-5: #9e9e9e;
+  --mono-gray-6: #777777;
+  --mono-gray-7: #585858;
+  --mono-gray-8: #424242;
+  --mono-gray-9: #353535;
+  --mono-gray-10: #1f1f1f;
 
   /* ── 색상 ── */
   --background: oklch(1 0 0);
