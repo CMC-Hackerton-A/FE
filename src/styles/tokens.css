@@ -22,6 +22,20 @@
   --mono-gray-9: #353535;
   --mono-gray-10: #1f1f1f;
 
+  /* ── 메인 오렌지 색상 ── 
+    디자인 시스템의 고정 팔레트입니다. light/dark 무관하게 값이 바뀌지 않습니다.
+    새 색상을 추가하면 index.css의 @theme inline에도 --color-{이름} 매핑을 추가하세요. */
+  --orange-100: #fff4ef;
+  --orange-70: #ffeee7;
+  --orange-60: #ffdbcd;
+  --orange-50: #ff8c5d; /* Main / normal */
+  --orange-40: #e67e54;
+  --orange-30: #cc704a;
+  --orange-20: #bf6946;
+  --orange-15: #995438; /* hovered */
+  --orange-10: #733f2a; /* pressed */
+  --orange-5: #593121; /* selected */
+  
   /* ── 퍼플 색상 ──
    디자인 시스템의 고정 팔레트입니다. light/dark 무관하게 값이 바뀌지 않습니다.
    새 색상을 추가하면 index.css의 @theme inline에도 --color-{이름} 매핑을 추가하세요. */
