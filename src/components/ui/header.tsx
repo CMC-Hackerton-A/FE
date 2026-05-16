@@ -2,6 +2,7 @@ import { IconButton } from './icon-button'
 import BackIcon from '@/assets/icons/common/back.svg?react'
 import logoImage from '@/img/logo.png'
 import { cn } from '@/lib/utils'
+import LogoIcon from '@/assets/icons/common/logo.svg?react'
 
 type HeaderProps = {
   showBackButton?: boolean
@@ -15,11 +16,7 @@ export default function Header({ showBackButton = true }: HeaderProps) {
         showBackButton ? 'justify-between' : 'justify-start px-8'
       )}
     >
-      <img
-        src={logoImage}
-        alt="Still Star"
-        className="h-5 w-auto"
-      />
+      <LogoIcon className="h-[15px] w-fit" />
       {showBackButton ? <IconButton icon={<BackIcon />} /> : null}
     </header>
   )

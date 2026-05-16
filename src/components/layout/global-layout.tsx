@@ -1,10 +1,10 @@
-import { Link, Outlet, useLocation } from "react-router";
-import logoSrc from "@/img/logo.png";
+import { Link, Outlet, useLocation } from 'react-router'
+import LogoIcon from '@/assets/icons/common/logo.svg?react'
 
 export default function GlobalLayout() {
-  const { pathname } = useLocation();
-  const isHome = pathname === "/";
-  const isImmersivePage = isHome || pathname.startsWith("/active");
+  const { pathname } = useLocation()
+  const isHome = pathname === '/'
+  const isImmersivePage = isHome || pathname.startsWith('/active')
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -16,23 +16,16 @@ export default function GlobalLayout() {
                 to="/"
                 className={`inline-flex shrink-0 items-center rounded-md outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                   isHome
-                    ? "focus-visible:ring-white/80 ring-offset-transparent"
-                    : "focus-visible:ring-ring ring-offset-background"
+                    ? 'ring-offset-transparent focus-visible:ring-white/80'
+                    : 'focus-visible:ring-ring ring-offset-background'
                 }`}
               >
-                <img
-                  src={logoSrc}
-                  alt="Still star"
-                  className="h-8 w-auto max-h-10 object-contain"
-                  width={160}
-                  height={40}
-                  decoding="async"
-                />
+                <LogoIcon className="h-[15px] w-fit" />
               </Link>
             </div>
           </header>
         ) : null}
-        <div className={isImmersivePage ? "" : "px-4 pb-6"}>
+        <div className={isImmersivePage ? '' : 'px-4 pb-6'}>
           <Outlet />
         </div>
       </main>
@@ -42,5 +35,5 @@ export default function GlobalLayout() {
         </footer>
       ) : null}
     </div>
-  );
+  )
 }
