@@ -227,7 +227,7 @@ export default function ActivePage() {
 
             <IconButton
               icon={<MessageCircle size={18} />}
-              onClick={() => navigate(`/active/${artist.id}/comments`)}
+              onClick={() => navigate(`/active/${artist.id}/comments`, { state: { artistId: artist.id } })}
             />
           </div>
         </div>
