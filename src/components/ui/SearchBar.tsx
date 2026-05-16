@@ -1,5 +1,7 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import BackIcon from '@/assets/icons/common/back.svg?react'
+import { IconButton } from '@/components/ui/icon-button'
 
 const SearchIcon = () => (
   <svg
@@ -27,6 +29,10 @@ const SearchIcon = () => (
       strokeLinejoin="round"
     />
   </svg>
+)
+
+export const BackButton = ({ onClick }: { onClick?: () => void }) => (
+  <IconButton icon={<BackIcon className="text-white" />} onClick={onClick} />
 )
 
 interface SearchBarProps {
