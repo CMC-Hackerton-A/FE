@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { MessageCircle, Star } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
@@ -22,7 +22,67 @@ type ArtistApiPayload = Partial<{
   starCount: number | string
 }>
 
+type Sparkle = {
+  id: string
+  top: number
+  left: number
+  size: number
+  opacity: number
+  duration: number
+  delay: number
+  rotate: number
+}
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
+const SPARKLE_COUNT_BY_LEVEL = [0, 14, 30, 52] as const
+const SPARKLE_SIZE_MULTIPLIER = 3
+
+const sparkleKeyframes = `
+@keyframes sparkleTwinkle {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.58) rotate(var(--sparkle-rotate));
+    opacity: 0.12;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.12) rotate(var(--sparkle-rotate));
+    opacity: var(--sparkle-opacity);
+  }
+}
+`
+
+function createSeededRandom(seed: number) {
+  let value = seed >>> 0
+  return () => {
+    value = (value * 1664525 + 1013904223) >>> 0
+    return value / 4294967296
+  }
+}
+
+function createSparkles(level: number, seed: number): Sparkle[] {
+  const count = SPARKLE_COUNT_BY_LEVEL[level] ?? 0
+  if (!count) return []
+
+  const random = createSeededRandom(seed + level * 97)
+  const minSizeByLevel = [0, 10, 12, 14] as const
+  const maxSizeByLevel = [0, 16, 20, 24] as const
+  const minSize = minSizeByLevel[level] ?? 7
+  const maxSize = maxSizeByLevel[level] ?? 12
+
+  return Array.from({ length: count }, (_, index) => {
+    const isHighlight = random() > 0.78
+    const baseSize = minSize + random() * (maxSize - minSize) + (isHighlight ? level * 4 : 0)
+    return {
+      id: `sparkle-${level}-${index}`,
+      top: 8 + random() * 76,
+      left: 4 + random() * 92,
+      size: Math.round(baseSize),
+      opacity: 0.58 + random() * 0.35,
+      duration: 1.1 + random() * 1.8,
+      delay: random() * 2.6,
+      rotate: Math.round(random() * 360),
+    }
+  })
+}
 
 function mapArtistPayloadToTopArtist(payload: ArtistApiPayload, fallbackId: number): TopArtist {
   const startYear = Number(payload.startYear ?? 1985)
@@ -106,11 +166,65 @@ export default function ActivePage() {
     setStarCount(artist.starCount)
   }, [artist.starCount])
 
+  const sparkleLevel = useMemo(() => {
+    if (starCount >= 10000) return 3
+    if (starCount >= 1000) return 2
+    if (starCount >= 100) return 1
+    return 0
+  }, [starCount])
+
+  const sparkles = useMemo(() => {
+    return createSparkles(sparkleLevel, artist.id)
+  }, [artist.id, sparkleLevel])
+
   return (
     <main
       className="relative h-dvh overflow-hidden bg-cover bg-center bg-no-repeat text-white"
       style={{ backgroundImage: `url(${activeBackground})` }}
     >
+      <style>{sparkleKeyframes}</style>
+      {sparkles.length > 0 ? (
+        <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden="true">
+          {sparkles.map((sparkle) => (
+            <div
+              key={sparkle.id}
+              className="absolute will-change-transform"
+              style={
+                {
+                  top: `${sparkle.top}%`,
+                  left: `${sparkle.left}%`,
+                  width: sparkle.size * SPARKLE_SIZE_MULTIPLIER,
+                  height: sparkle.size * SPARKLE_SIZE_MULTIPLIER,
+                  animation: `sparkleTwinkle ${sparkle.duration}s ease-in-out ${sparkle.delay}s infinite`,
+                  filter: `drop-shadow(0 0 ${Math.max(6, Math.round(sparkle.size * SPARKLE_SIZE_MULTIPLIER * 0.95))}px rgba(255,255,255,0.95))`,
+                  ['--sparkle-rotate' as string]: `${sparkle.rotate}deg`,
+                  ['--sparkle-opacity' as string]: sparkle.opacity,
+                } as CSSProperties
+              }
+            >
+              <svg viewBox="0 0 24 24" className="h-full w-full fill-white text-white">
+                <path d="M12 1.7L14.83 7.44L21.16 8.36L16.58 12.82L17.66 19.12L12 16.14L6.34 19.12L7.42 12.82L2.84 8.36L9.17 7.44L12 1.7Z" />
+              </svg>
+            </div>
+          ))}
+          {sparkles.map((sparkle) => (
+            <div
+              key={`${sparkle.id}-glow`}
+              className="absolute rounded-full bg-white/65"
+              style={{
+                top: `${sparkle.top}%`,
+                left: `${sparkle.left}%`,
+                width: Math.max(5, Math.round(sparkle.size * SPARKLE_SIZE_MULTIPLIER * 0.52)),
+                height: Math.max(5, Math.round(sparkle.size * SPARKLE_SIZE_MULTIPLIER * 0.52)),
+                transform: 'translate(-50%, -50%)',
+                filter: `blur(${Math.max(2, Math.round(sparkle.size * SPARKLE_SIZE_MULTIPLIER * 0.2))}px)`,
+                opacity: Math.min(0.45, sparkle.opacity * 0.6),
+                animation: `sparkleTwinkle ${sparkle.duration + 0.15}s ease-in-out ${sparkle.delay}s infinite`,
+              }}
+            />
+          ))}
+        </div>
+      ) : null}
       <div className="relative z-10 flex h-full flex-col px-4 pt-5">
         <div className="flex items-center gap-2">
           <IconButton icon={<BackIcon />} onClick={() => navigate(-1)} />
