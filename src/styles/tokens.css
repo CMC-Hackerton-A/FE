@@ -22,6 +22,21 @@
   --mono-gray-9: #353535;
   --mono-gray-10: #1f1f1f;
 
+  /* ── 퍼플 색상 ──
+   디자인 시스템의 고정 팔레트입니다. light/dark 무관하게 값이 바뀌지 않습니다.
+   새 색상을 추가하면 index.css의 @theme inline에도 --color-{이름} 매핑을 추가하세요. */
+  --purple-100: #ECE8F0;
+  --purple-90: #E3DDE9;
+  --purple-80: #C5B9D1;
+  --purple-70: #431C6C;
+  --purple-60: #3C1961;
+  --purple-50: #3C1961;
+  --purple-40: #361656;
+  --purple-30: #321551;
+  --purple-20: #281141;
+  --purple-10: #1E0D31;
+  --purple-5: #170A26;
+
   /* ── 색상 ── */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

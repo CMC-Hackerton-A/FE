@@ -76,6 +76,19 @@
   --color-mono-gray-9: var(--mono-gray-9);
   --color-mono-gray-10: var(--mono-gray-10);
 
+  /* 퍼플 색상 */
+  --color-purple-100: var(--purple-100);
+  --color-purple-90: var(--purple-90);
+  --color-purple-80: var(--purple-80);
+  --color-purple-70: var(--purple-70);
+  --color-purple-60: var(--purple-60);
+  --color-purple-50: var(--purple-50);
+  --color-purple-40: var(--purple-40);
+  --color-purple-30: var(--purple-30);
+  --color-purple-20: var(--purple-20);
+  --color-purple-10: var(--purple-10);
+  --color-purple-5: var(--purple-5);
+
   /* 반경 */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
