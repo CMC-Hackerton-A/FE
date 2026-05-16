@@ -1,0 +1,27 @@
+/* =============================================================
+   Typography
+   폰트 패밀리, 크기 스케일, 렌더링 설정을 관리합니다.
+   - 폰트를 교체할 경우: index.css의 @import와
+     @theme inline의 --font-sans도 함께 바꿔주세요.
+   ============================================================= */
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../assets/fonts/PretendardVariable.woff2') format('woff2');
+  font-weight: 100 900; /* 모든 weight를 하나의 파일로 */
+  font-display: swap;
+}
+
+:root {
+  /* ── 렌더링 ── */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  body {
+    @apply font-pretendard;
+  }
+}
