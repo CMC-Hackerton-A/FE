@@ -1,12 +1,16 @@
-export type SnapPoint = 'closed' | 'half' | 'full'
+export type SnapPoint = 'closed' | 'peek' | 'half' | 'full'
 
 export const SNAP: Record<string, SnapPoint> = {
   CLOSED: 'closed',
+  PEEK: 'peek',
   HALF: 'half',
   FULL: 'full',
 } as const
 
 export const DEFAULT_HALF_RATIO = 0.8
+
+// 핸들바만 보이는 peek 높이 (py-4 패딩 32px + h-1 바 4px + 여유 4px)
+export const PEEK_HEIGHT = 40
 
 // 이 이상 속도면 snap 방향 강제 결정
 export const VELOCITY_THRESHOLD = 0.6

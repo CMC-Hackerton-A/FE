@@ -29,9 +29,11 @@ export function BottomSheet({
     halfRatio,
   })
 
-  usePreventScroll(isOpen)
-
+  const isPeek = currentSnap === 'peek'
   const isFull = currentSnap === 'full'
+
+  // peek 상태에서는 배경 스크롤 허용
+  usePreventScroll(isOpen && !isPeek)
 
   if (!isOpen) return null
 
@@ -42,9 +44,8 @@ export function BottomSheet({
       <div
         data-backdrop
         className="absolute inset-0 bg-black/50"
-        onClick={() => {
-          snapTo('closed')
-        }}
+        style={{ pointerEvents: isPeek ? 'none' : 'auto' }}
+        onClick={() => snapTo('peek')}
       />
       <div
         ref={sheetRef}
