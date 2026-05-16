@@ -66,6 +66,18 @@
   --color-purple-10: var(--purple-10);
   --color-purple-5: var(--purple-5);
 
+/* 핑크 포인트 색상 */
+--color-pink-100: var(--pink-100);
+--color-pink-80: var(--pink-80);
+--color-pink-60: var(--pink-60);
+--color-pink-50: var(--pink-50);
+--color-pink-40: var(--pink-40);
+--color-pink-30: var(--pink-30);
+--color-pink-20: var(--pink-20);
+--color-pink-15: var(--pink-15);
+--color-pink-10: var(--pink-10);
+--color-pink-5: var(--pink-5);
+
   /* 색상 */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
