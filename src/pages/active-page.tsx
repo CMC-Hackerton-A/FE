@@ -1,28 +1,15 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import { MessageCircle, Star } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
 import { IconButton } from '@/components/ui/icon-button'
 import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { LastAlbumSection } from '@/components/bottom-sheet/last-album-section'
+import { useGetArtistDetailQuery } from '@/entities/artist/api/useGetArtistDetailQuery'
+import type { DetailResponse } from '@/entities/artist/model/types'
 import BackIcon from '@/assets/icons/common/back.svg?react'
 import beatlesImg from '@/assets/images/main-beatles.png'
 import activeBackground from '@/img/active-background.png'
 import type { TopArtist } from '@/components/artist/top-artist-card'
-
-type ArtistApiPayload = Partial<{
-  id: number | string
-  artistId: number | string
-  name: string
-  artistName: string
-  profileImage: string
-  imageUrl: string
-  genre: string
-  country: string
-  startYear: number | string
-  endYear: number | string
-  starCount: number | string
-}>
 
 type Sparkle = {
   id: string
@@ -34,8 +21,6 @@ type Sparkle = {
   delay: number
   rotate: number
 }
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
 
 // 100 / 1000 / 10000 단계별 반짝이 개수
 const SPARKLE_COUNT_BY_LEVEL = [0, 10, 18, 28] as const
@@ -69,7 +54,6 @@ function createSparkles(level: number, seed: number): Sparkle[] {
 
   const random = createSeededRandom(seed + level * 97)
 
-  // 단계별 기본 별 크기 범위
   const minSizeByLevel = [0, 7, 9, 11] as const
   const maxSizeByLevel = [0, 11, 14, 18] as const
   const minSize = minSizeByLevel[level] ?? 6
@@ -93,62 +77,26 @@ function createSparkles(level: number, seed: number): Sparkle[] {
   })
 }
 
-function mapArtistPayloadToTopArtist(
-  payload: ArtistApiPayload,
-  fallbackId: number
-): TopArtist {
-  const startYear = Number(payload.startYear ?? 1985)
-  const endYear = Number(payload.endYear ?? 2014)
+function mapDetailToTopArtist(detail: DetailResponse): TopArtist {
+  const [start, end] = (detail.activityPeriod ?? '')
+    .split('-')
+    .map((s) => parseInt(s.trim(), 10))
 
   return {
-    id: Number(payload.id ?? payload.artistId ?? fallbackId),
-    name: payload.name ?? payload.artistName ?? '비틀즈',
-    imageUrl: payload.imageUrl ?? payload.profileImage ?? beatlesImg,
-    genre: payload.genre ?? '인디밴드',
-    country: payload.country ?? '미국',
-    startYear,
-    endYear,
-    starCount: Number(payload.starCount ?? 0),
+    id: detail.artistId,
+    name: detail.artistName,
+    imageUrl: detail.imageUrl,
+    genre: detail.genre,
+    country: detail.country,
+    startYear: isNaN(start) ? 0 : start,
+    endYear: isNaN(end) ? 0 : end,
+    starCount: detail.starCount,
   }
 }
 
 function normalizeStarCount(value: unknown): number {
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : 0
-}
-
-async function fetchArtistDetail(artistId: number): Promise<TopArtist> {
-  const endpointCandidates = [
-    `${API_BASE_URL}/api/artists/${artistId}`,
-    `${API_BASE_URL}/artists/${artistId}`,
-  ]
-
-  let lastError: Error | null = null
-
-  for (const endpoint of endpointCandidates) {
-    try {
-      const response = await fetch(endpoint)
-      if (!response.ok) {
-        throw new Error(`요청 실패: ${response.status}`)
-      }
-
-      const json: unknown = await response.json()
-      const root = json as {
-        result?: ArtistApiPayload
-        data?: ArtistApiPayload
-      } & ArtistApiPayload
-      const payload = root.result ?? root.data ?? root
-
-      return mapArtistPayloadToTopArtist(payload, artistId)
-    } catch (error) {
-      lastError =
-        error instanceof Error
-          ? error
-          : new Error('아티스트 정보를 불러오지 못했습니다.')
-    }
-  }
-
-  throw lastError ?? new Error('아티스트 정보를 불러오지 못했습니다.')
 }
 
 export default function ActivePage() {
@@ -163,14 +111,10 @@ export default function ActivePage() {
     return artist ?? null
   }, [location.state])
 
-  const { data: apiArtist } = useQuery({
-    queryKey: ['artist-detail', artistId],
-    queryFn: () => fetchArtistDetail(artistId),
-    enabled: Number.isFinite(artistId) && artistId > 0,
-  })
+  const { data: detailData } = useGetArtistDetailQuery(artistId)
 
   const artist = useMemo<TopArtist>(() => {
-    if (apiArtist) return apiArtist
+    if (detailData) return mapDetailToTopArtist(detailData)
     if (stateArtist) return stateArtist
 
     return {
@@ -183,7 +127,7 @@ export default function ActivePage() {
       endYear: 2014,
       starCount: 0,
     }
-  }, [apiArtist, artistId, stateArtist])
+  }, [detailData, artistId, stateArtist])
 
   const duration = artist.endYear - artist.startYear
   const [starCount, setStarCount] = useState(() =>
@@ -271,6 +215,7 @@ export default function ActivePage() {
           ))}
         </div>
       ) : null}
+
       <div className="relative z-10 flex h-full flex-col px-4 pt-5 pb-24">
         <div className="flex items-start justify-between">
           <IconButton icon={<BackIcon />} onClick={() => navigate(-1)} />
