@@ -25,3 +25,24 @@
     @apply font-pretendard;
   }
 }
+
+/* =============================================================
+   Typography Components
+   디자인 시스템의 텍스트 스타일을 클래스로 정의합니다.
+   JSX에서 className="title1" 형태로 사용합니다.
+
+   추가 방법:
+   1. 아래에 @layer components 블록 안에 클래스 작성
+   2. 이름 규칙: {계층}/{굵기}{크기} → 클래스명: {계층}-{굵기숫자}
+      예) Title1/Bold40 → .title1, Body1/Regular16 → .body1-regular
+   ============================================================= */
+
+@layer components {
+  /* Title1/Bold40 — Pretendard Bold 40px, line-height 100% */
+  .title1 {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1;
+  }
+}
