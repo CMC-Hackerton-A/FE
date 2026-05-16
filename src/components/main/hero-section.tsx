@@ -1,4 +1,4 @@
-import homeBackground from '@/assets/images/main-bg.png'
+import homeBackground from '@/img/home-background.png'
 import { SearchBar } from '../ui/SearchBar'
 
 export default function HeroSection() {
