@@ -99,6 +99,31 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  /* 퍼플 색상 */
+  --color-purple-100: var(--purple-100);
+  --color-purple-90: var(--purple-90);
+  --color-purple-80: var(--purple-80);
+  --color-purple-70: var(--purple-70);
+  --color-purple-60: var(--purple-60);
+  --color-purple-50: var(--purple-50);
+  --color-purple-40: var(--purple-40);
+  --color-purple-30: var(--purple-30);
+  --color-purple-20: var(--purple-20);
+  --color-purple-10: var(--purple-10);
+  --color-purple-5: var(--purple-5);
+
+/* 핑크 포인트 색상 */
+  --color-pink-100: var(--pink-100);
+  --color-pink-80: var(--pink-80);
+  --color-pink-60: var(--pink-60);
+  --color-pink-50: var(--pink-50);
+  --color-pink-40: var(--pink-40);
+  --color-pink-30: var(--pink-30);
+  --color-pink-20: var(--pink-20);
+  --color-pink-15: var(--pink-15);
+  --color-pink-10: var(--pink-10);
+  --color-pink-5: var(--pink-5);
+
   /* 반경 */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
