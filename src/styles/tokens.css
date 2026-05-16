@@ -62,6 +62,19 @@
   --purple-10: #1e0d31;
   --purple-5: #170a26;
 
+
+  /* ── Main-Pink Color System ── */
+  --pink-100: #FEEDF4;
+  --pink-800: #FEE4EF; /* 80을 보통 800 스케일로 맞춥니다 */
+  --pink-600: #FDC8DE;
+  --pink-50: #FF82B5;  /* Point / Normal */
+  --pink-40: #FF549A;  /* Hovered */
+  --pink-30: #FB3285;  /* Pressed */
+  --pink-20: #B41657;  /* Selected */
+  --pink-15: #6F2342;
+  --pink-10: #560E2B;
+  --pink-5: #3E0C20;
+
   /* ── 색상 ── */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
