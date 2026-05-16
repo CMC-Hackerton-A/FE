@@ -30,23 +30,25 @@ export default function TopArtistCard({ rank, artist }: TopArtistCardProps) {
     >
       <span className="text-pink-40 body1-semibold w-4 shrink-0">{rank}</span>
 
-      <img
-        src={artist.imageUrl || FALLBACK_IMAGE}
-        alt={artist.name}
-        className="h-16 w-16 shrink-0 rounded-sm object-cover"
-      />
+      <div className="items-cener flex gap-7">
+        <img
+          src={artist.imageUrl || FALLBACK_IMAGE}
+          alt={artist.name}
+          className="size-20 shrink-0 rounded-sm object-cover"
+        />
 
-      <div className="min-w-0 flex-1">
-        <h2 className="body1-semibold truncate">{artist.name}</h2>
-        <span className="caption4-regular text-mono-gray-6 block truncate">
-          {`${artist.startYear} - ${artist.endYear}, ${duration}년`}
-        </span>
-        <div className="bg-mono-gray-3 my-1 h-[0.5px] w-full" />
-        <div className="flex items-center gap-[5px]">
-          <StarIcon size={14} className="text-yellow-400" />
-          <span className="text-pink-30 text-sm leading-none font-bold">
-            {artist.starCount.toLocaleString()}개
+        <div className="inline-flex flex-col">
+          <h2 className="body1-semibold truncate">{artist.name}</h2>
+          <span className="caption4-regular text-mono-gray-6 block truncate">
+            {`${artist.startYear} - ${artist.endYear}, ${duration}년`}
           </span>
+          <div className="bg-mono-gray-3 my-2 h-[0.5px] w-full" />
+          <div className="flex items-center gap-[5px]">
+            <StarIcon size={14} className="text-yellow-400" />
+            <span className="text-pink-30 text-sm leading-none font-bold">
+              {artist.starCount.toLocaleString()}개
+            </span>
+          </div>
         </div>
       </div>
     </Link>
