@@ -29,45 +29,6 @@ const SearchIcon = () => (
   </svg>
 )
 
-export const BackIcon = () => (
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M12.444 9.33325L8 13.7773L12.444 18.2226M8 13.7773H20.2227C21.4015 13.7773 22.532 14.2455 23.3655 15.0791C24.1991 15.9126 24.6673 17.0431 24.6673 18.2219C24.6673 19.4007 24.1991 20.5312 23.3655 21.3648C22.532 22.1983 21.4015 22.6666 20.2227 22.6666H19.1107"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-)
-
-export const BackButton = ({ onClick }: { onClick?: () => void }) => (
-  <button
-    onClick={onClick}
-    aria-label="뒤로가기"
-    style={{
-      width: '40px',
-      height: '40px',
-      borderRadius: '50px',
-      border: '0.2px solid rgba(255,255,255,0.14)',
-      background: 'rgba(255,255,255,0.10)',
-      boxShadow: '0 4px 4px 0 rgba(255,255,255,0.10)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-    }}
-  >
-    <BackIcon />
-  </button>
-)
-
 interface SearchBarProps {
   placeholder?: string
   onSearch?: (query: string) => void
@@ -88,18 +49,7 @@ export function SearchBar({
   }
 
   return (
-    <div
-      style={{
-        width: '292px',
-        padding: '12px 20px 12px 12px',
-        borderRadius: '12px',
-        backgroundColor: '#ffffff',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-      }}
-      className={cn(className)}
-    >
+    <div className="flex w-full items-center gap-3 rounded-[12px] bg-white p-3 pr-5">
       <SearchIcon />
       <input
         type="text"
@@ -107,7 +57,7 @@ export function SearchBar({
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="font-pretendard text-mono-gray-4 placeholder:text-mono-gray-4 flex-1 border-none bg-transparent text-xs font-semibold outline-none"
+        className="text-mono-gray-4 placeholder:text-mono-gray-4 flex-1 border-none bg-transparent text-xs font-semibold outline-none"
       />
     </div>
   )
