@@ -6,9 +6,13 @@ import 'swiper/css'
 
 interface SearchResultSectionProps {
   query: string
+  onSelectArtist?: (artistId: number) => void
 }
 
-export function SearchResultSection({ query }: SearchResultSectionProps) {
+export function SearchResultSection({
+  query,
+  onSelectArtist,
+}: SearchResultSectionProps) {
   // TODO: useSearchArtistsQuery(query) 로 교체
   const length = 7
 
@@ -31,7 +35,10 @@ export function SearchResultSection({ query }: SearchResultSectionProps) {
               <SwiperSlide key={slideIndex}>
                 <div className="flex flex-col gap-2">
                   {slideItems.map((artist) => (
-                    <SearchResultItem key={artist.id} />
+                    <SearchResultItem
+                      key={artist.id}
+                      onClick={() => onSelectArtist?.(artist.id)}
+                    />
                   ))}
                 </div>
               </SwiperSlide>

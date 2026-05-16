@@ -3,10 +3,15 @@ import { SearchBar } from '../ui/SearchBar'
 
 interface HeroSectionProps {
   searchedText: string
-  onSearch: (query: string) => void
+  onSearchChange: (query: string) => void
+  onSearchSubmit?: (query: string) => void
 }
 
-export function HeroSection({ onSearch, searchedText }: HeroSectionProps) {
+export function HeroSection({
+  onSearchChange,
+  onSearchSubmit,
+  searchedText,
+}: HeroSectionProps) {
   return (
     <div
       className="relative h-[40%] w-full bg-cover bg-center bg-no-repeat"
@@ -17,7 +22,11 @@ export function HeroSection({ onSearch, searchedText }: HeroSectionProps) {
           <span className="block font-extralight">그들은 여전히</span>
           <span className="block font-semibold">스타로 남아있다.</span>
         </div>
-        <SearchBar onSearch={onSearch} value={searchedText} />
+        <SearchBar
+          value={searchedText}
+          onChange={onSearchChange}
+          onSubmit={onSearchSubmit}
+        />
       </div>
     </div>
   )
